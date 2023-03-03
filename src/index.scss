@@ -11,7 +11,13 @@
 
 @layer components {
   .page-container {
-    max-width: 800px;
+    max-width: 1284px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .page-container-fluid {
+    max-width: 1440px;
     margin-left: auto;
     margin-right: auto;
   }
