@@ -1,6 +1,9 @@
 import { Fragment } from "react";
 import { NavLink } from "react-router-dom";
 
+import MovieCard from "./components/movie/MovieCard";
+import MovieList from "./components/movie/MovieList";
+
 function App() {
   return (
     <Fragment>
@@ -8,6 +11,7 @@ function App() {
         <span className="text-primary">Home</span>
         <span>Movie</span>
       </header>
+
       <section className="banner h-[500px] page-container mb-20">
         <div className="w-full h-full rounded-lg bg-white relative">
           {/* Phủ bóng đổ lên ảnh */}
@@ -40,25 +44,7 @@ function App() {
         <h2 className="capitalize text-white mb-10 text-2xl font-bold">
           Now playing
         </h2>
-        <div className="movie-list grid grid-cols-4 gap-10">
-          <div className="movie-card rounded-lg p-3 bg-slate-800 text-white">
-            <img
-              src="https://nld.mediacdn.vn/2019/4/25/3515432-endgamedek-15561710302491765206118.jpg"
-              alt=""
-              className="w-full h-[250px] object-cover rounded-lg mb-5"
-            />
-            <h3 className=" text-[16px] font-sans mb-3">
-              Spiderman: HomeComing
-            </h3>
-            <div className="flex items-center justify-between text-sm opacity-50 mb-10">
-              <span>2017</span>
-              <span>7.4</span>
-            </div>
-            <button className="py-3 px-6 rounded-lg capitalize bg-primary w-full">
-              Watch now
-            </button>
-          </div>
-        </div>
+        <MovieList></MovieList>
       </section>
       <section className="movie-layout page-container pb-20 ">
         <h2 className="capitalize text-white mb-10 text-2xl font-bold">
