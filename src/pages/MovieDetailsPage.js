@@ -116,7 +116,7 @@ function MovieVideos() {
     <div className="py-10">
       <div className="flex flex-col gap-10">
         {results.splice(0, 2).map((item) => (
-          <div className="" key={item.id}>
+          <div key={item.id}>
             <h3 className="mb-3 text-xl font-medium p-3 bg-secondary inline-block">
               {item.name}
             </h3>
