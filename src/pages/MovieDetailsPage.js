@@ -1,10 +1,13 @@
 import React from "react";
 import { useParams } from "react-router-dom";
+import { Swiper, SwiperSlide } from "swiper/react";
 import useSWR from "swr";
+import MovieCard from "../components/movie/MovieCard";
 
 //https://api.themoviedb.org/3/movie/{movie_id}?4942b98510b1078ce139cb7667bf7765
+
 const MovieDetailsPage = () => {
-  // lấy được thông số
+  // lấy được thông số 123456 chính là id của phim
   const { movieId } = useParams();
 
   const fetcher = (...args) => fetch(...args).then((res) => res.json());
@@ -36,7 +39,7 @@ const MovieDetailsPage = () => {
         />
       </div>
 
-      <h1 className="text-center font-bold text-3xl text-white mb-10">
+      <h1 className="text-center font-bold text-4xl text-white mb-10">
         {title}
       </h1>
       {genres.length > 0 && (
@@ -51,11 +54,117 @@ const MovieDetailsPage = () => {
           ))}
         </div>
       )}
-      <div className="text-center text-sm leading-relaxed max-w-[600px] mx-auto">
+      <p className="text-center text-sm leading-relaxed max-w-[600px] mx-auto mb-10">
         {overview}
-      </div>
+      </p>
+      <MovieCredits></MovieCredits>
+      <MovieVideos></MovieVideos>
+      <MovieSimilar></MovieSimilar>
     </div>
   );
 };
 
+function MovieCredits() {
+  const { movieId } = useParams();
+
+  const fetcher = (...args) => fetch(...args).then((res) => res.json());
+  // https://api.themoviedb.org/3/movie/{movie_id}/credits?api_key=<<api_key>>
+  const { data, error } = useSWR(
+    `https://api.themoviedb.org/3/movie/${movieId}/credits?api_key=4942b98510b1078ce139cb7667bf7765`,
+    fetcher
+  );
+  if (!data) return null;
+  const { cast } = data;
+  if (!cast || cast.length <= 0) return null;
+  return (
+    <div className="py-10">
+      <h2 className="text-center text-3xl mb-10">Casts</h2>
+      <div className="mx-20">
+        <div className="grid grid-cols-4 gap-x-5">
+          {/* splice cắt đổ thành 1 mảng mới 4 người */}
+          {cast.splice(0, 4).map((item) => (
+            <div className="cast-item" key={item.id}>
+              <img
+                src={`https://image.tmdb.org/t/p/original/${item.profile_path}`}
+                className="w-full h-[350px] object-cover rounded-lg mb-3"
+                alt=""
+              />
+              <h3 className="text-xl font-medium">{item.name}</h3>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function MovieVideos() {
+  const { movieId } = useParams();
+
+  const fetcher = (...args) => fetch(...args).then((res) => res.json());
+  // https://api.themoviedb.org/3/movie/{movie_id}/videos?api_key=<<api_key>>
+  const { data, error } = useSWR(
+    `https://api.themoviedb.org/3/movie/${movieId}/videos?api_key=4942b98510b1078ce139cb7667bf7765`,
+    fetcher
+  );
+  if (!data) return null;
+  const { results } = data;
+  if (!results || results.length <= 0) return null;
+  //   console.log(data);
+
+  return (
+    <div className="py-10">
+      <div className="flex flex-col gap-10">
+        {results.splice(0, 2).map((item) => (
+          <div className="" key={item.id}>
+            <h3 className="mb-3 text-xl font-medium p-3 bg-secondary inline-block">
+              {item.name}
+            </h3>
+            <div className="w-full aspect-video">
+              <iframe
+                width="942"
+                height="530"
+                src={`https://www.youtube.com/embed/${item.key}`}
+                title="Thị Mầu - Hòa Minzy x Masew | Official Music Video"
+                frameBorder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                allowFullScreen
+                className="w-full h-full object-fill"
+              ></iframe>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function MovieSimilar() {
+  const { movieId } = useParams();
+
+  const fetcher = (...args) => fetch(...args).then((res) => res.json());
+  // https://api.themoviedb.org/3/movie/{movie_id}/similar?api_key=<<api_key>>
+  const { data, error } = useSWR(
+    `https://api.themoviedb.org/3/movie/${movieId}/similar?api_key=4942b98510b1078ce139cb7667bf7765`,
+    fetcher
+  );
+
+  if (!data) return null;
+  const { results } = data;
+  if (!results || results <= 0) return null;
+  return (
+    <div className="py-10">
+      <h2 className="text-3xl font-medium mb-10">Similar Movies</h2>
+      <div className="movie-list">
+        <Swiper grabCursor={"true"} spaceBetween={40} slidesPerView={"auto"}>
+          {results.map((item) => (
+            <SwiperSlide key={item.id}>
+              <MovieCard item={item}></MovieCard>
+            </SwiperSlide>
+          ))}
+        </Swiper>
+      </div>
+    </div>
+  );
+}
 export default MovieDetailsPage;
