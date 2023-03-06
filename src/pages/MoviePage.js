@@ -4,11 +4,13 @@ import useSWR from "swr";
 import MovieCard from "../components/movie/MovieCard";
 import useDebounce from "../hooks/useDebounce";
 //https://api.themoviedb.org/3/search/movie?api_key=4942b98510b1078ce139cb7667bf7765
+const pageCount = 5;
 const MoviePage = () => {
   const fetcher = (...args) => fetch(...args).then((res) => res.json());
+  const [nextPage, setNextPage] = useState(1);
   const [filter, setFilter] = useState("");
   const [url, setUrl] = useState(
-    "https://api.themoviedb.org/3/movie/popular?api_key=4942b98510b1078ce139cb7667bf7765"
+    `https://api.themoviedb.org/3/movie/popular?api_key=4942b98510b1078ce139cb7667bf7765&page=${nextPage}`
   );
   const filterDebounce = useDebounce(filter, 500);
   const handleFilerChage = (e) => {
@@ -22,16 +24,19 @@ const MoviePage = () => {
   useEffect(() => {
     if (filterDebounce) {
       setUrl(
-        `https://api.themoviedb.org/3/search/movie?api_key=4942b98510b1078ce139cb7667bf7765&query=${filterDebounce}`
+        `https://api.themoviedb.org/3/search/movie?api_key=4942b98510b1078ce139cb7667bf7765&query=${filterDebounce}&page=${nextPage}`
       );
     } else {
       setUrl(
-        "https://api.themoviedb.org/3/movie/popular?api_key=4942b98510b1078ce139cb7667bf7765"
+        `https://api.themoviedb.org/3/movie/popular?api_key=4942b98510b1078ce139cb7667bf7765&page=${nextPage}`
       );
     }
-  }, [filterDebounce]);
+  }, [filterDebounce, nextPage]);
+  // if (!data) return null;
   const movies = data?.results || [];
-
+  // const { page, total_pages } = data;
+  // console.log("page", page);
+  // console.log("page", total_pages);
   return (
     <div className="py-10 page-container">
       <div className="flex mb-10">
@@ -71,6 +76,7 @@ const MoviePage = () => {
             <MovieCard key={item.id} item={item}></MovieCard>
           ))}
       </div>
+      {/* pagination */}
       <div className="flex item-center justify-center mt-10 gap-x-5">
         <span className="cursor-pointer">
           <svg
@@ -79,7 +85,8 @@ const MoviePage = () => {
             viewBox="0 0 24 24"
             strokeWidth="1.5"
             stroke="currentColor"
-            class="w-6 h-6"
+            className="w-6 h-6"
+            onClick={() => setNextPage(nextPage - 1)}
           >
             <path
               strokeLinecap="round"
@@ -88,9 +95,14 @@ const MoviePage = () => {
             />
           </svg>
         </span>
-        <span className="cursor-pointer inline-block text-slate-900 py-2 px-4 rounded bg-white leading-none">
-          1
-        </span>
+        {new Array(pageCount).fill(0).map((item, index) => (
+          <span
+            className="cursor-pointer inline-block text-slate-900 py-2 px-4 rounded bg-white leading-none"
+            onClick={() => setNextPage(index + 1)}
+          >
+            {index + 1}
+          </span>
+        ))}
 
         <span className="cursor-pointer">
           <svg
@@ -99,7 +111,8 @@ const MoviePage = () => {
             viewBox="0 0 24 24"
             strokeWidth="1.5"
             stroke="currentColor"
-            class="w-6 h-6"
+            className="w-6 h-6"
+            onClick={() => setNextPage(nextPage + 1)}
           >
             <path
               strokeLinecap="round"
