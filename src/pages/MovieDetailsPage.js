@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import { Swiper, SwiperSlide } from "swiper/react";
 import useSWR from "swr";
 import MovieCard from "../components/movie/MovieCard";
+import { tmdbAPI } from "../config";
 
 //https://api.themoviedb.org/3/movie/{movie_id}?4942b98510b1078ce139cb7667bf7765
 
@@ -12,10 +13,7 @@ const MovieDetailsPage = () => {
 
   const fetcher = (...args) => fetch(...args).then((res) => res.json());
 
-  const { data, error } = useSWR(
-    `https://api.themoviedb.org/3/movie/${movieId}?api_key=4942b98510b1078ce139cb7667bf7765`,
-    fetcher
-  );
+  const { data, error } = useSWR(tmdbAPI.getMovieDetail(movieId), fetcher);
   if (!data) return null;
   const { backdrop_path, poster_path, title, genres, overview } = data;
   return (
@@ -33,7 +31,7 @@ const MovieDetailsPage = () => {
 
       <div className="w-full h-[400px] max-w-[800px] mx-auto -mt-[200px] relative z-10 pb-10">
         <img
-          src={`https://image.tmdb.org/t/p/original/${poster_path}`}
+          src={tmdbAPI.imageOriginal(poster_path)}
           className="w-full h-full object-cover rounded-lg"
           alt=""
         />
@@ -70,7 +68,7 @@ function MovieCredits() {
   const fetcher = (...args) => fetch(...args).then((res) => res.json());
   // https://api.themoviedb.org/3/movie/{movie_id}/credits?api_key=<<api_key>>
   const { data, error } = useSWR(
-    `https://api.themoviedb.org/3/movie/${movieId}/credits?api_key=4942b98510b1078ce139cb7667bf7765`,
+    tmdbAPI.getMovieMeta(movieId, "credits"),
     fetcher
   );
   if (!data) return null;
@@ -85,7 +83,7 @@ function MovieCredits() {
           {cast.splice(0, 4).map((item) => (
             <div className="cast-item" key={item.id}>
               <img
-                src={`https://image.tmdb.org/t/p/original/${item.profile_path}`}
+                src={tmdbAPI.imageOriginal(item.profile_path)}
                 className="w-full h-[350px] object-cover rounded-lg mb-3"
                 alt=""
               />
@@ -104,7 +102,7 @@ function MovieVideos() {
   const fetcher = (...args) => fetch(...args).then((res) => res.json());
   // https://api.themoviedb.org/3/movie/{movie_id}/videos?api_key=<<api_key>>
   const { data, error } = useSWR(
-    `https://api.themoviedb.org/3/movie/${movieId}/videos?api_key=4942b98510b1078ce139cb7667bf7765`,
+    tmdbAPI.getMovieMeta(movieId, "videos"),
     fetcher
   );
   if (!data) return null;
@@ -145,7 +143,7 @@ function MovieSimilar() {
   const fetcher = (...args) => fetch(...args).then((res) => res.json());
   // https://api.themoviedb.org/3/movie/{movie_id}/similar?api_key=<<api_key>>
   const { data, error } = useSWR(
-    `https://api.themoviedb.org/3/movie/${movieId}/similar?api_key=4942b98510b1078ce139cb7667bf7765`,
+    tmdbAPI.getMovieMeta(movieId, "similar"),
     fetcher
   );
 

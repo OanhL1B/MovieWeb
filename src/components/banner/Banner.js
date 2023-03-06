@@ -1,6 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { SwiperSlide, Swiper } from "swiper/react";
 import useSWR from "swr";
+import { tmdbAPI } from "../../config";
 import Button from "../button/Button";
 const Banner = () => {
   const fetcher = (...args) => fetch(...args).then((res) => res.json());
@@ -33,7 +34,7 @@ function BannerItem({ item }) {
       {/* Phủ bóng đổ lên ảnh */}
       <div className="overlay absolute inset-0 bg-gradient-to-t from-[rgba(0,0,0,0.5)] to-[rgba(0,0,0,0.5)] rounded-lg "></div>
       <img
-        src={`https://image.tmdb.org/t/p/original/${poster_path}`}
+        src={tmdbAPI.imageOriginal(poster_path)}
         alt=""
         className="w-full h-full object-cover rounded-lg"
       />
