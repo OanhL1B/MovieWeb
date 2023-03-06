@@ -24,6 +24,7 @@ const MoviePage = () => {
   };
 
   const { data, error } = useSWR(url, fetcher);
+  console.log("data", data);
   // nếu không có data và không có lỗi sẽ cho loading
   const loading = !data && !error;
 
@@ -44,12 +45,12 @@ const MoviePage = () => {
   // pagiantion
   useEffect(() => {
     if (!data || !data.total_pages) return;
-    setPageCount(Math.ceil(data.total_pages / itemsPerPage));
+    setPageCount(Math.ceil(data.total_results / itemsPerPage));
   }, [data, itemOffset]);
 
   // Invoke when user click to request another page.
   const handlePageClick = (event) => {
-    const newOffset = (event.selected * itemsPerPage) % data.total_pages;
+    const newOffset = (event.selected * itemsPerPage) % data.total_results;
     setItemOffset(newOffset);
     setNextPage(event.selected + 1);
   };
