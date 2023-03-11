@@ -5,7 +5,7 @@ import MovieCard from "components/movie/MovieCard";
 
 import { tmdbAPI } from "config";
 import useDebounce from "hooks/useDebounce";
-//https://api.themoviedb.org/3/search/movie?api_key=4942b98510b1078ce139cb7667bf7765
+// https://api.themoviedb.org/3/search/movie?api_key=4942b98510b1078ce139cb7667bf7765&page=1&query=cats
 
 // số lượng phần tử hiện thị trên 1 trang
 const itemsPerPage = 20;
