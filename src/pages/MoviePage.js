@@ -19,6 +19,7 @@ const MoviePage = () => {
   const [filter, setFilter] = useState("");
   const [url, setUrl] = useState(tmdbAPI.getMovieList("popular", nextPage));
   const filterDebounce = useDebounce(filter, 500);
+
   const handleFilerChage = (e) => {
     setFilter(e.target.value);
   };
